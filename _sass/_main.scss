@@ -7,11 +7,12 @@
 }
 
 body {
-	font-family: system-ui, sans-serif;
+	font-family: Space Grotesk, sans-serif;
 	-webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
 	line-height:1.5;
 	font-size: 1rem;
+	background-color: #171819;
 	color: #E2E7E9;
 }
 
@@ -20,7 +21,7 @@ nav ul {
 }
 
 a {
-    color: #a94f63;
+    color: #A94F63;
     text-decoration-skip-ink: auto;
     text-decoration: underline;
 }
