@@ -83,6 +83,7 @@ header {
 header a {
 	text-decoration: none;
 	color: #BC0020;
+
 }
 
 header li {
@@ -203,4 +204,10 @@ section {
 
 figcaption {
     font-size: smaller;
+}
+
+@font-face {
+	font-family: "Space Grotesk";
+	src: 
+		url("/assets/fonts/SpaceGrotesk-Regular.woff2")
 }
