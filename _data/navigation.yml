@@ -1,9 +1,9 @@
 links:
-- title: Writing
+- title: POSTS
   url: /
-- title: About
+- title: ABOUT
   url: /about
-- title: Search
+- title: SEARCH
   url: /search
-- title: Rss
+- title: RSS
   url: /atom.xml
