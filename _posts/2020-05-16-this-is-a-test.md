@@ -4,7 +4,8 @@ title: This is a Markdown Test!
 description: Testing for Markdown styles and crap
 summary: Testing for Markdown styles and crap
 comments: true
-tags: [madeuptag]
+category: Testing
+tags: madeuptag
 ---
 
 # Header 1
