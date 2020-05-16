@@ -15,8 +15,10 @@ author:
 permalink: pretty
 
 baseurl: ""
-
-highlighter: rouge
+markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
 
 exclude:
   - .jekyll-cache
