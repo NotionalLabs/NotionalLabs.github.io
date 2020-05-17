@@ -1,4 +1,4 @@
-@import url(http://fonts.googleapis.com/css?family=Abel|Source+Code+Pro);
+@import url('https://fonts.googleapis.com/css2?family=Abel&family=Source+Code+Pro&display=swap');
 
 *,:after,:before {
 	box-sizing:border-box;
@@ -9,7 +9,7 @@
 }
 
 body {
-	font-family: Space Grotesk, sans-serif;
+	font-family: 'Space Grotesk', sans-serif;
 	-webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
 	line-height:1.5;
