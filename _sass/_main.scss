@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Abel&family=Source+Code+Pro&family=Titillium+Web:ital,wght@0,400;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,400;0,700;1,400&display=swap');
 
 *,:after,:before {
 	box-sizing:border-box;
@@ -9,7 +9,7 @@
 }
 
 body {
-	font-family: 'Space Grotesk', sans-serif;
+	font-family: 'Titillium Web', sans-serif;
 	-webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
 	line-height:1.5;
@@ -151,13 +151,13 @@ strong, b {
 	text-overflow:ellipsis;
 	text-decoration: none;
 	color: #E2E7E9;
-	font-weight: bold;
+	//font-weight: bold;
 }
 
 .posts li time, .projects li time {
 	padding-left: 1rem;
 	white-space: nowrap;
-	font-family: 'Source Code Pro', monospace;
+	font-family: 'Titillium Web', monospace;
 	font-variant-numeric: tabular-nums;
 }
 
