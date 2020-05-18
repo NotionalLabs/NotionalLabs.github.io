@@ -58,28 +58,28 @@ The following timings are based on observations I’ve made on a sample of contr
 ### Symbols
 There are 4 types of symbol in the packet format: Preamble, Zero (“0”), One (“1”), and a footer:
 
-|:-:|
-|![Carrier Signal](/assets/images/2012-12-08_Carrier_Wave.jpg "Carrier Signal")|
+|:---:|
+| ![Carrier Signal](/assets/images/2012-12-08_Carrier_Wave.jpg "Carrier Signal") |
 
 #### Preamble:
 
 |-|:-|
-|![Preamble](/assets/images/2012-12-08_Preamble.jpg "Preamble")|**High:** 2ms (2000us) / **Low:** 2ms (2000us) / **Period:** 4ms (2000us)|
+|![Preamble](/assets/images/2012-12-08_Preamble.jpg "Preamble")| **High:** 2ms (2000us) / **Low:** 2ms (2000us) / **Period:** 4ms (2000us) |
 
 #### Zero:
 
 |-|:-|
-|![Zero](/assets/images/2012-12-08_Zero.jpg "Zero")|**High:** 0.3ms (300us) / **Low:** 0.3 (300us) / **Period:** 0.6ms (600us)|
+|![Zero](/assets/images/2012-12-08_Zero.jpg "Zero")| **High:** 0.3ms (300us) / **Low:** 0.3 (300us) / **Period:** 0.6ms (600us) |
 
 #### One:
 
 | - | :- |
-| ![One](/assets/images/2012-12-08_One.jpg "One") |**High:** 0.3ms (300us) / **Low:** 0.7ms (700ms) / **Period:** 1ms (1000us)|
+| ![One](/assets/images/2012-12-08_One.jpg "One") | **High:** 0.3ms (300us) / **Low:** 0.7ms (700ms) / **Period:** 1ms (1000us) |
 
 #### Footer:
 
 | - | :- |
-|![Footer](/assets/images/2012-12-08_footer.jpg "Footer")|**High:** 0.3ms (300us)|
+| ![Footer](/assets/images/2012-12-08_footer.jpg "Footer") | **High:** 0.3ms (300us) |
 
 I almost missed this, but there is in fact a footer pulse at the end of the packet 300 microseconds long followed by a long period of low signal until the next packet header.
 
