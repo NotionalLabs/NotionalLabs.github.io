@@ -25,7 +25,7 @@ So there’s a decent body of work in the hacker and RC communities to decode th
 
 Notably, one thing these projects both have in common is that they arrived at a protocol specification that uses 32-bits (4 bytes).
 
-### Reverse Engineering the Controller
+## Reverse Engineering the Controller
 
 So enter my new Saleae Logic Analyser . I’ve never used a logic analyser or oscilloscope before, so I wanted to start with a project that I knew was possible and would have an output that I already understood (or so I thought…).
 
@@ -43,37 +43,41 @@ I began by using a multimeter to ensure that the unlabelled IC wasn’t operatin
 
 Now that I know which pin the transmission signal is output on (pin 8), I can sniff it and see the 32-bit control protocol right? Well, almost. I should explain a little about the protocol for those who are unfamiliar.
 
-### Decoding the physical packet format
+## Decoding the physical packet format
 
 The following timings are based on observations I’ve made on a sample of control packets captured with the logic analyser. Here’s a picture of the full packet:
 
 ![Example packet](/assets/images/2012-12-08_Example_Packet_3.jpg "Example packet") 
 
-#### Carrier Modulation
+### Carrier Modulation
 
 **Modulation Freq**: 38khz (50% duty cycle, 26us period, so 13us high/13us low)
 
 38khz is a common carrier frequency for consumer Infrared communications. For the uninitiated, the white blocks in the main image above are made up of the high-frequency oscillations you can see on the left. This is usually done so that various transmitters that use the same medium (in this case the Infrared light spectrum – probably around the 940nm wavelength) can transmit on a different carrier modulation frequency and not interfere with the others’ transmissions (this is called [F]requency Division Multiplexing](http://en.wikipedia.org/wiki/Frequency_division_multiplexing)).
 
-#### Symbols
+### Symbols
 There are 4 types of symbol in the packet format: Preamble, Zero (“0”), One (“1”), and a footer:
 
 ![Carrier Signal](/assets/images/2012-12-08_Carrier_Wave.jpg "Carrier Signal")
 
-##### Preamble:
+#### Preamble:
 **High:** 2ms (2000us) / **Low:** 2ms (2000us) / **Period:** 4ms (2000us)
+
 ![Preamble](/assets/images/2012-12-08_Preamble.jpg "Preamble") 
 
-##### Zero:
+#### Zero:
 **High:** 0.3ms (300us) / **Low:** 0.3 (300us) / **Period:** 0.6ms (600us)
+
 ![Zero](/assets/images/2012-12-08_Zero.jpg "Zero") 
 
-##### One:
+#### One:
 **High:** 0.3ms (300us) / **Low:** 0.7ms (700ms) / **Period:** 1ms (1000us)
+
 ![One](/assets/images/2012-12-08_One.jpg "One") 
 
-##### Footer:
+#### Footer:
 **High:** 0.3ms (300us)
+
 ![Footer](/assets/images/2012-12-08_footer.jpg "Footer") 
 
 I almost missed this, but there is in fact a footer pulse at the end of the packet 300 microseconds long followed by a long period of low signal until the next packet header.
