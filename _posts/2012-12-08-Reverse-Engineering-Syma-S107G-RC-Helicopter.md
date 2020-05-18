@@ -11,6 +11,8 @@ tags: infrared protocol reversing saleae logic
 
 The Syma 107 RC helicopter is a pretty great gadget, all things considered – it’s cheap, fun, and ridiculously good for the price. It’s also a spectacular gadget for fledgling hackers.
 
+![Syma S107G Helicopter](/assets/images/2012-12-08_S107G-title.jpg "Syma S107G Helicopter")
+
 **1-26-2013 UPDATE – I’ve written up a full protocol specification for the Syma 107G – If you are here looking for a purely technical description of the protocol, [look here](/misc/protocols/Syma107_ProtocolSpec_v1.txt)** 
 
 I first discovered a series of articles about this RC Heli on Hackaday, where a number of people had developed proof-of-concept controllers or jammers based on a decoded IR protocol for controlling the chopper. As it happened, these Heli’s were a bit of a fad in our lab and we had a number of them lying around (both alive and dead) so naturally I decided to have a go myself. I initially created a prototype Arduino IR controller that uses Processing to provide a front-end for one helicopter, then expanded it to control two similtaneously by switching the channel bits rapidly. I won’t go on too much about this here because what I actually want to talk about is a quirk in the protocol I decoded.
@@ -27,17 +29,17 @@ Notably, one thing these projects both have in common is that they arrived at a 
 
 So enter my new Saleae Logic Analyser . I’ve never used a logic analyser or oscilloscope before, so I wanted to start with a project that I knew was possible and would have an output that I already understood (or so I thought…).
 
-![alt text](/asssets/images/2012-12-08_SaleaeLogic.jpg "Saleae Logic 8")
+![Saleae Logic 8](/assets/images/2012-12-08_SaleaeLogic.jpg "Saleae Logic 8")
 
 *As an aside, the Saleae Logic is really an excellent tool – I had read a lot about it and there are any number of superlatives floating around, but I must say it is EXACTLY what I was looking for. Great price-point, loads of features and the software is superb. If you are curious about logic analysers and don’t want to spend too much, I really recommend the Logic – it’s been great for me so far.*
 
 I noticed immediately that the board in my controller was markedly different than the ones pictured on either the above links. Mine has way more components for a start:
 
-![alt text](/asssets/images/2012-12-08_circuitboard_with_logic.jpg "Controller with Logic Analyzer harness")
+![Controller with Logic Analyzer harness](/assets/images/2012-12-08_circuitboard_with_logic.jpg "Controller with Logic Analyzer harness")
 
 I began by using a multimeter to ensure that the unlabelled IC wasn’t operating at a voltage higher than 5v and wouldn’t accidentally damage the Logic analyser. Everything was fine so I began probing the pins. Here is a rough guess at the pinout (note: I only really care about the pin that drives the IR LED transmitter circuit so I never looked into confirming how the control input works, etc…):
 
-![alt text](/asssets/images/2012-12-08_IC_Pinout.jpg "Controller IC pinout")
+![Controller IC pinout](/assets/images/2012-12-08_IC_Pinout.jpg "Controller IC pinout")
 
 Now that I know which pin the transmission signal is output on (pin 8), I can sniff it and see the 32-bit control protocol right? Well, almost. I should explain a little about the protocol for those who are unfamiliar.
 
