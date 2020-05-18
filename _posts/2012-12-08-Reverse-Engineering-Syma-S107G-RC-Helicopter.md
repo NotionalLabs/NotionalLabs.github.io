@@ -77,8 +77,9 @@ There are 4 types of symbol in the packet format: Preamble, Zero (“0”), One 
 
 
 #### Test:
-| ------------- |:--------------|
-| ![One](/assets/images/2012-12-08_One.jpg "One")      | **High:** 0.3ms (300us) / **Low:** 0.7ms (700ms) / **Period:** 1ms (1000us) |
+|||
+|-|:-|
+|![One](/assets/images/2012-12-08_One.jpg "One")|**High:** 0.3ms (300us) / **Low:** 0.7ms (700ms) / **Period:** 1ms (1000us)|
 
 #### Footer:
 **High:** 0.3ms (300us)
