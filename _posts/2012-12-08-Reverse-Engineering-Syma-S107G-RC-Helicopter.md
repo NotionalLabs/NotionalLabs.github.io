@@ -19,9 +19,9 @@ I first discovered a series of articles about this RC Heli on Hackaday, where a 
 
 So there’s a decent body of work in the hacker and RC communities to decode the protocol used by the Syma 107 – here are a couple:
 
-* [This post](http://www.kerrywong.com/2012/08/27/reverse-engineering-the-syma-s107g-ir-protocol/) by Kerry Wong is a really great read and a study in methodical analysis in reverse engineering.
+  * [This post](http://www.kerrywong.com/2012/08/27/reverse-engineering-the-syma-s107g-ir-protocol/) by Kerry Wong is a really great read and a study in methodical analysis in reverse engineering.
 
-* [This site](http://hamsterworks.co.nz/mediawiki/index.php/FPGAheli) by Hamsterworks is also a great practical guide to reverse engineering the protocol and I actually used these timings for my own controller a while back. *Link is no longer online*
+  * [This site](http://hamsterworks.co.nz/mediawiki/index.php/FPGAheli) by Hamsterworks is also a great practical guide to reverse engineering the protocol and I actually used these timings for my own controller a while back. *Link is no longer online*
 
 Notably, one thing these projects both have in common is that they arrived at a protocol specification that uses 32-bits (4 bytes).
 
@@ -58,7 +58,8 @@ The following timings are based on observations I’ve made on a sample of contr
 ### Symbols
 There are 4 types of symbol in the packet format: Preamble, Zero (“0”), One (“1”), and a footer:
 
-![Carrier Signal](/assets/images/2012-12-08_Carrier_Wave.jpg "Carrier Signal")
+|:-:|
+|![Carrier Signal](/assets/images/2012-12-08_Carrier_Wave.jpg "Carrier Signal")|
 
 #### Preamble:
 
