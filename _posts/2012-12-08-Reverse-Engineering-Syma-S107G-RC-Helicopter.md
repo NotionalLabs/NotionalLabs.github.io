@@ -61,9 +61,9 @@ There are 4 types of symbol in the packet format: Preamble, Zero (“0”), One 
 ![Carrier Signal](/assets/images/2012-12-08_Carrier_Wave.jpg "Carrier Signal")
 
 #### Preamble:
-**High:** 2ms (2000us) / **Low:** 2ms (2000us) / **Period:** 4ms (2000us)
 
-![Preamble](/assets/images/2012-12-08_Preamble.jpg "Preamble") 
+|-|:-|
+|![Preamble](/assets/images/2012-12-08_Preamble.jpg "Preamble")|**High:** 2ms (2000us) / **Low:** 2ms (2000us) / **Period:** 4ms (2000us)|
 
 #### Zero:
 
@@ -73,12 +73,12 @@ There are 4 types of symbol in the packet format: Preamble, Zero (“0”), One 
 #### One:
 
 | - | :- |
-| ![One](/assets/images/2012-12-08_One.jpg "One") | **High:** 0.3ms (300us) / **Low:** 0.7ms (700ms) / **Period:** 1ms (1000us) |
+| ![One](/assets/images/2012-12-08_One.jpg "One") |**High:** 0.3ms (300us) / **Low:** 0.7ms (700ms) / **Period:** 1ms (1000us)|
 
 #### Footer:
-**High:** 0.3ms (300us)
 
-![Footer](/assets/images/2012-12-08_footer.jpg "Footer") 
+| - | :- |
+|![Footer](/assets/images/2012-12-08_footer.jpg "Footer")|**High:** 0.3ms (300us)|
 
 I almost missed this, but there is in fact a footer pulse at the end of the packet 300 microseconds long followed by a long period of low signal until the next packet header.
 
