@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Hardware Reversing: Syma S107G RC Helicopter
+title: "Hardware Reversing: Syma S107G RC Helicopter"
 description: An exploration of the IR control protocol used by the S107G toy helicopter, and my first foray into hardware reverse engineering.
 comments: true
 category: reverse\ engineering
