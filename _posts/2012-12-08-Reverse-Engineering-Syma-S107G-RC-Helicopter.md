@@ -7,7 +7,7 @@ category: reverse\ engineering
 tags: infrared protocol reversing saleae logic
 ---
 
-*[2020-05-18] This post was migrated from my old blog, www.jimhung.co.uk. I've tried to ensure all links, images, and content are reproduced, but please @ me if you find anyuthing missing.*
+*[2020-05-18] This post was migrated from my old blog in 2012. I've tried to ensure all links, images, and content are reproduced, but please @ me if you find anyuthing missing.*
 
 The Syma 107 RC helicopter is a pretty great gadget, all things considered – it’s cheap, fun, and ridiculously good for the price. It’s also a spectacular gadget for fledgling hackers.
 
@@ -51,7 +51,7 @@ The following timings are based on observations I’ve made on a sample of contr
 
 #### Carrier Modulation
 
-Modulation Freq: 38khz (50% duty cycle, 26us period, so 13us high/13us low)
+**Modulation Freq**: 38khz (50% duty cycle, 26us period, so 13us high/13us low)
 
 38khz is a common carrier frequency for consumer Infrared communications. For the uninitiated, the white blocks in the main image above are made up of the high-frequency oscillations you can see on the left. This is usually done so that various transmitters that use the same medium (in this case the Infrared light spectrum – probably around the 940nm wavelength) can transmit on a different carrier modulation frequency and not interfere with the others’ transmissions (this is called [F]requency Division Multiplexing](http://en.wikipedia.org/wiki/Frequency_division_multiplexing)).
 
@@ -61,16 +61,20 @@ There are 4 types of symbol in the packet format: Preamble, Zero (“0”), One 
 ![Carrier Signal](/assets/images/2012-12-08_Carrier_Wave.jpg "Carrier Signal")
 
 ##### Preamble:
-![Preamble](/assets/images/2012-12-08_Preamble.jpg "Preamble") High: 2ms (2000us) / Low: 2ms (2000us) / Period: 4ms (2000us)
+**High:** 2ms (2000us) / **Low:** 2ms (2000us) / **Period:** 4ms (2000us)
+![Preamble](/assets/images/2012-12-08_Preamble.jpg "Preamble") 
 
 ##### Zero:
-![Zero](/assets/images/2012-12-08_Zero.jpg "Zero") High: 0.3ms (300us) / Low: 0.3 (300us) / Period: 0.6ms (600us)
+**High:** 0.3ms (300us) / **Low:** 0.3 (300us) / **Period:** 0.6ms (600us)
+![Zero](/assets/images/2012-12-08_Zero.jpg "Zero") 
 
 ##### One:
-![One](/assets/images/2012-12-08_One.jpg "One") High: 0.3ms (300us) / Low: 0.7ms (700ms) / Period: 1ms (1000us)
+**High:** 0.3ms (300us) / **Low:** 0.7ms (700ms) / **Period:** 1ms (1000us)
+![One](/assets/images/2012-12-08_One.jpg "One") 
 
 ##### Footer:
-![Footer](/assets/images/2012-12-08_footer.jpg "Footer") High: 0.3ms (300us)
+**High:** 0.3ms (300us)
+![Footer](/assets/images/2012-12-08_footer.jpg "Footer") 
 
 I almost missed this, but there is in fact a footer pulse at the end of the packet 300 microseconds long followed by a long period of low signal until the next packet header.
 
