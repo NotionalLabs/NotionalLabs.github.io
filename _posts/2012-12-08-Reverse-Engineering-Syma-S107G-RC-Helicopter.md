@@ -66,17 +66,11 @@ There are 4 types of symbol in the packet format: Preamble, Zero (“0”), One 
 ![Preamble](/assets/images/2012-12-08_Preamble.jpg "Preamble") 
 
 #### Zero:
-**High:** 0.3ms (300us) / **Low:** 0.3 (300us) / **Period:** 0.6ms (600us)
 
-![Zero](/assets/images/2012-12-08_Zero.jpg "Zero") 
+|-|:-|
+|![Zero](/assets/images/2012-12-08_Zero.jpg "Zero")|**High:** 0.3ms (300us) / **Low:** 0.3 (300us) / **Period:** 0.6ms (600us)|
 
 #### One:
-**High:** 0.3ms (300us) / **Low:** 0.7ms (700ms) / **Period:** 1ms (1000us)
-
-![One](/assets/images/2012-12-08_One.jpg "One") 
-
-
-#### Test:
 
 | - | :- |
 | ![One](/assets/images/2012-12-08_One.jpg "One") | **High:** 0.3ms (300us) / **Low:** 0.7ms (700ms) / **Period:** 1ms (1000us) |
