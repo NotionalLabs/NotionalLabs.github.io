@@ -19,9 +19,9 @@ I first discovered a series of articles about this RC Heli on Hackaday, where a 
 
 So there’s a decent body of work in the hacker and RC communities to decode the protocol used by the Syma 107 – here are a couple:
 
-[This post](http://www.kerrywong.com/2012/08/27/reverse-engineering-the-syma-s107g-ir-protocol/) by Kerry Wong is a really great read and a study in methodical analysis in reverse engineering.
+* [This post](http://www.kerrywong.com/2012/08/27/reverse-engineering-the-syma-s107g-ir-protocol/) by Kerry Wong is a really great read and a study in methodical analysis in reverse engineering.
 
-[This site](http://hamsterworks.co.nz/mediawiki/index.php/FPGAheli) by Hamsterworks is also a great practical guide to reverse engineering the protocol and I actually used these timings for my own controller a while back. *Link is no longer online*
+* [This site](http://hamsterworks.co.nz/mediawiki/index.php/FPGAheli) by Hamsterworks is also a great practical guide to reverse engineering the protocol and I actually used these timings for my own controller a while back. *Link is no longer online*
 
 Notably, one thing these projects both have in common is that they arrived at a protocol specification that uses 32-bits (4 bytes).
 
@@ -42,6 +42,49 @@ I began by using a multimeter to ensure that the unlabelled IC wasn’t operatin
 ![Controller IC pinout](/assets/images/2012-12-08_IC_Pinout.jpg "Controller IC pinout")
 
 Now that I know which pin the transmission signal is output on (pin 8), I can sniff it and see the 32-bit control protocol right? Well, almost. I should explain a little about the protocol for those who are unfamiliar.
+
+### Decoding the physical packet format
+
+The following timings are based on observations I’ve made on a sample of control packets captured with the logic analyser. Here’s a picture of the full packet:
+
+![Example packet](/assets/images/2012-12-08_Example_Packet_3.jpg "Example packet") 
+
+#### Carrier Modulation
+
+Modulation Freq: 38khz (50% duty cycle, 26us period, so 13us high/13us low)
+
+38khz is a common carrier frequency for consumer Infrared communications. For the uninitiated, the white blocks in the main image above are made up of the high-frequency oscillations you can see on the left. This is usually done so that various transmitters that use the same medium (in this case the Infrared light spectrum – probably around the 940nm wavelength) can transmit on a different carrier modulation frequency and not interfere with the others’ transmissions (this is called [F]requency Division Multiplexing](http://en.wikipedia.org/wiki/Frequency_division_multiplexing)).
+
+#### Symbols
+There are 4 types of symbol in the packet format: Preamble, Zero (“0”), One (“1”), and a footer:
+
+![Carrier Signal](/assets/images/2012-12-08_Carrier_Wave.jpg "Carrier Signal")
+
+##### Preamble:
+![Preamble](/assets/images/2012-12-08_Preamble.jpg "Preamble") High: 2ms (2000us) / Low: 2ms (2000us) / Period: 4ms (2000us)
+
+##### Zero:
+![Zero](/assets/images/2012-12-08_Zero.jpg "Zero") High: 0.3ms (300us) / Low: 0.3 (300us) / Period: 0.6ms (600us)
+
+##### One:
+![One](/assets/images/2012-12-08_One.jpg "One") High: 0.3ms (300us) / Low: 0.7ms (700ms) / Period: 1ms (1000us)
+
+##### Footer:
+![Footer](/assets/images/2012-12-08_footer.jpg "Footer") High: 0.3ms (300us)
+
+I almost missed this, but there is in fact a footer pulse at the end of the packet 300 microseconds long followed by a long period of low signal until the next packet header.
+
+#### Channels
+
+The Syma 107G controller appears to support 2 “channels” so that two pilots can fly their heli’s at the same time without interfering with each other. Examining the behaviour of the transmitter when switching channels indicated that the only differences between the two is a) the packet transmission interval and b) a special bit in the control packet is flipped (more on this later). The image below shows the differences in packet Tx intervals when the channel select slider is flipped (channel 1 of the Logic analyser):
+
+![Channel Flip](/assets/images/2012-12-08_ChannelFlip.jpg "Channel Flip")
+
+The transmit interval for Channel A is **120ms** (start of a packet header to the start of the next packet), or 8.33 packets per second. The transmit interval for Channel B is **180ms**, or 5.55 packets per second.
+
+So surprisingly, the carrier modulation frequency remains the same on both channels – not the most robust design, huh? I suspect the reason the transmit interval is increased is to reduce the likelihood of a collision of control packets from two controllers – if a packet collision does occur, the next control frames from each controller will almost definitely be out of phase with each other, so the chopper shouldn’t just fall out of the air (though in my experience, they do get a bit clumsy when you have two going at once…).
+
+
 
 # Header 1
 
