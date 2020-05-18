@@ -1,0 +1,315 @@
+                                                                      
+Remote Control Protocol Library					 J.Hung
+Entry 001                                               www.jimhung.com
+Category: IR Helicopter                                    January 2013
+
+
+
+		      Syma 107G IR Control Protocol
+		   	       Version 1.0
+		
+
+Preface
+
+	This document specifies an open protocol description for the
+	Syma 107G remote-controlled helicopter toy. It is provided
+	freely for educational purposes and without any claim to
+	ownership of the design or associated intellectual property.
+	
+	If you are the owner of the design and would like me to
+	remove it from the protocol library, email me at:
+	jimhung[at]gmail[dot]com and I will comply asap.
+	
+Version History
+
+	Version 1.0 - January 26 2013
+	  - Initial version.
+	
+	
+Table of Contents
+
+   1.	Introduction                                              
+   2.	Physical Specification
+   2.1.	- Infrared Wavelength  
+   2.2. - Modulation Frequency
+   2.3. - Symbol Encoding
+   2.4. - Channels   
+   3.	Control Packet Specification
+   3.1. - Packet Structure
+   3.1.1. - S107T1
+   3.1.2. - S107T2
+   3.2. - Control Definition
+   3.2.1. - Yaw
+   3.2.2. - Pitch
+   3.2.3. - Channel
+   3.2.4. - Throttle
+   3.2.5. - Trim
+   
+   
+1. Introduction
+
+	This protocol specification was determined by reverse
+	engineering the modulated control signals sent from the
+	controller handset. These signals were sniffed using a
+	Salea Logic logic-analyzer and manually decoded to determine
+	their meaning.
+	
+	So far I have encountered two distinct versions of the Syma
+	107G handset, each with its own variation of the control
+	protocol. These appear to be related to the version of the
+	controller board within the (otherwise identical) handsets.
+	These versions can be identified by the following silkscreened
+	markings:
+	
+	Revision  PCB Date  Location on PCB
+	--------  --------  ------------------------------------------
+      -  S107T1	  20090818  Underneath yaw/pitch and throttle control.
+      -  S107T2   20100308  Underneath yaw/pitch and on right of PCB.
+                                   
+	For the purposes of this document, the changes in protocol
+	will be labelled with one of the above Revision names. Other
+	than any labelled differences, the two versions are identical.
+	
+	
+2. Physical Specification
+
+	The Syma 107G is a 3-channel (Yaw, Pitch, Throttle) coaxial
+	RC helicopter which utilizes Infrared (IR) communications for
+	control via battery-operated handset.
+	
+	The control communications are open-loop and solely consists of
+	one-way traffic. There is no parity or error checking.
+	
+	The transmission of a control packet is contingent on the
+	application of throttle
+	
+	
+2.1. Infrared Wavelength 
+
+	The IR wavelength appears to be 940nm.
+
+
+2.2. Carrier Modulation Frequency
+
+	The control signal is modulated at the following frequency:
+	
+	- 38khz
+	  - 50% duty cycle
+	  - 26us period
+	    - 13us high/13us low
+
+
+2.3. Symbol Encoding
+
+	The control packet is encoded with pulse-length encoding. The
+	following pulse lengths represent all 4 possible symbols:
+	
+	Symbol	High Length(us)	Low Length (us)	Period
+	------  ---------------	---------------	------
+      - Header	2000 us 	2000 us  	4 ms
+      - Zero	300 us		300 us		0.6 ms
+      - One	300 us		700 us		1 ms
+      - Footer	300 us		>2000 us	N/A
+
+
+2.4. Channels
+
+	The Syma 107G supports 2 channels; Ch.A and Ch.B.
+	
+	Channels are not differentiated by modulation frequency, but
+	simply by a specific control bit within the packet. This is
+	described in Section 3.2.3.
+	
+	In order to minimize control packet collisions, the
+	transmission interval is different between Ch.A and Ch.B:
+	
+	Ch.A. - TX Interval: 120ms (8.33 packets per second)
+	Ch.B. - TX Interval: 180ms (5.55 packets per second)
+	
+	The Ch.B. interval is 1.5x the interval of Ch.A., therefore
+	should two controllers transmit in-phase with each other,
+	packet collisions will occur every other packet for
+	Ch.B. (approximately 3 times a second).
+	
+
+3. Control Packet Specification
+
+3.1. Packet Structure
+
+	The two controller versions have different length control
+	packets - S107T1 has a 24-bit packet, S107T2 has a 32-bit 
+	packet.
+	
+	
+3.1.1. S107T1
+
+                 |-------------- 24-bits -------------|
+                 
+        +========+------------------------------------+=======+
+        | Header |             Control Data           | Footer|
+        +========+------------------------------------+=======+
+
+	         General 24-bit S107T1 Packet Structure
+		  
+		  	         Figure 1.
+
+
+	The S107T1 control packet consists of a header symbol, 24-bits
+	of control information, and a footer symbol.
+	
+	The following figure details the bit-level control data 
+	structure:
+	
+    	   0                   1                   2       
+    	   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 
+   	  +-+-------------+-+-------------+-+-------------+
+   	  |A|     Yaw     |B|    Pitch    |C|   Throttle  |
+   	  +-+-------------+-+-------------+-+-------------+
+
+	             24-bit Control Data Structure
+	             
+	             	         Figure 2.
+	             	         
+
+	Bit	Len	Description
+	-----	---	------------------------------------------
+	    0	 1	A - Unknown flag - reserved?
+	  1-7	 7	Yaw control - decimal range: 0-127
+	    8	 1	B - Unknown flag - reserved?
+	 9-15	 7	Pitch control - decimal range: 0-127
+	   16	 1	C - Channel flag - decimal range: 0-1
+	17-23	 7	Throttle control - decimal range: 0-127
+	
+	
+3.1.2. S107T2
+
+                 |-------------- 32-bits -------------|
+                 
+        +========+------------------------------------+=======+
+        | Header |             Control Data           | Footer|
+        +========+------------------------------------+=======+
+
+	         General 32-bit S107T2 Packet Structure
+		  
+		  	         Figure 3.
+
+	The S107T1 control packet consists of a header symbol, 
+	32-bits of control information, and a footer symbol.
+		
+	The following figure details the bit-level control data 
+	structure:
+
+
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-------------+-+-------------+-+-------------+-+-------------+
+   |A|     Yaw     |B|    Pitch    |C|   Throttle  |D|    Trim*    |
+   +-+-------------+-+-------------+-+-------------+-+-------------+
+
+	             32-bit Control Data Structure
+	             
+	             	         Figure 4.
+	             	         
+
+	Bit	Len	Description
+	-----	---	---------------------------------------
+	    0	 1	A - Unknown flag - reserved?
+	  1-7	 7      Yaw control - decimal range: 0-127
+	    8	 1      B - Unknown flag - reserved?
+	 9-15	 7      Pitch control - decimal range: 0-127
+	   16	 1      C - Channel flag - decimal range: 0-1
+	17-23	 7      Throttle control - decimal range: 0-127
+	   24	 1      D - Unknown flag - reserved?
+	25-31	 7      Trim control - decimal range: 0-127
+
+
+	* - The S107T2 controller implements a 4th byte responsive to
+	the Trim knob; however, actual Trim functionality is
+	implemented by manipulating the Yaw control. See Section 3.2.5.
+
+
+3.2. Control Definition
+
+3.2.1. Yaw
+
+	Yaw control is represented by a linear decimal value between
+	0 and 127, centered on 63:
+	
+	
+	 <--------Right Turn--------> <--------Left Turn--------->
+	|----------------------------+----------------------------|
+	0                            ^                           127
+		  	  	 Center (63)        
+
+	On the S107T1 and S107T2 controllers, the Yaw control is
+	mechanically centered with a return spring when not in use.
+
+
+3.2.2. Pitch
+
+	Pitch control is represented by a linear decimal value between
+	0 and 127, centered on 63:
+	
+	 <-------Pitch Forward------> <------Pitch Backward------>
+	|----------------------------+----------------------------|
+	0                            ^                           127
+		  	  	 Center (63)  
+
+	On the S107T1 and S107T2 controllers, the Pitch control is
+	mechanically centered with a return spring when not in use.
+
+
+3.2.3. Channel
+
+	NB - Channel select has a physical component - see Section 2.4.
+
+	The Channel is controlled by a one-bit flag in position 16.
+	
+			       +-----+-------+
+			       |Value|Channel|
+			       +-----|-------|
+			       |  0  |   A   |
+			       |  1  |   B   |
+                               +-----+-------+
+                               
+
+3.2.4. Throttle
+
+	Throttle control is represented by a linear decimal value
+	between 0 and 127.
+	
+	 <--- Low Throttle -------------------- High Throttle --->
+	|---------------------------------------------------------|
+	0                                                        127
+
+
+	On the S107T1 and S107T2 controllers, the Throttle control is
+	mechanically zeroed with a return spring when not in use.
+
+3.2.5. Trim
+
+	Trim control is achieved on both S107T1 and S107T2 by adjusting
+	the Yaw value. This adjustment has a range of +/- 20.
+	
+	Trim controller knob position:
+	
+	 <---------Trim Right-------> <---------Trim Left-------->
+	|----------------------------+----------------------------|
+	+20 Yaw 	        Center (+/-0)		    -20 Yaw
+	
+	Additionally, the S107T2 controller transmits an additional
+	4th byte which reflects the Trim knob setting; however, it does
+	not appear that this byte is used by the S107G to modify Trim.
+	It seems likely that this byte is part of the control mechanism
+	for other models.
+	
+	This additional Trim-responsive field is represented by a 
+	linear decimal value between 0 and 127, centered on 63:
+	
+	 <---------Trim Right--------> <---------Trim Left------->
+	|----------------------------+----------------------------|
+	0                            ^                           127
+		  	  	 Center (63)  
+
+	
+[END]
