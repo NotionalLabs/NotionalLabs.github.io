@@ -125,25 +125,22 @@ Channel B     001111110011111111010010  (0): 63  (1): 63  (2): 210
 From this information, we can make the following assumptions:
 
 **Byte 0**
-
-– Byte 0 represents the Yaw (left/right) control.
-– Byte 0 has a range of 0-127.
-– 0-62 is a right turn, 63 is centre (default) value, 64-127 is a left turn.
-– the first bit, bit 0, appears to always be 0.
+* Byte 0 represents the Yaw (left/right) control.
+* Byte 0 has a range of 0-127.
+* 0-62 is a right turn, 63 is centre (default) value, 64-127 is a left turn.
+* the first bit, bit 0, appears to always be 0.
 
 **Byte 1**
-
-– Byte 1 represents the Pitch (forward/backwards) control.
-– Byte 1 has a range of 0-127.
-– 0-62 is pitch forward, 63 is centre (default) value, 64-127 is pitch backwards.
-– the first bit appears to always be 0.
+* Byte 1 represents the Pitch (forward/backwards) control.
+* Byte 1 has a range of 0-127.
+* 0-62 is pitch forward, 63 is centre (default) value, 64-127 is pitch backwards.
+* the first bit appears to always be 0.
 
 **Byte 2**
-
-– Byte 2 represents throttle and channel.
-– Byte 2 (throttle) has a range of 0-127.
-– 0 is 0% throttle, 127 is 100% throttle.
-– the most significant bit of Byte 2 indicates which Channel is selected. 0 for Channel A, 1 for Channel B. This is how we can have 2 channels without changing the carrier frequency.
+* Byte 2 represents throttle and channel.
+* Byte 2 (throttle) has a range of 0-127.
+* 0 is 0% throttle, 127 is 100% throttle.
+* the most significant bit of Byte 2 indicates which Channel is selected. 0 for Channel A, 1 for Channel B. This is how we can have 2 channels without changing the carrier frequency.
 
 
 
