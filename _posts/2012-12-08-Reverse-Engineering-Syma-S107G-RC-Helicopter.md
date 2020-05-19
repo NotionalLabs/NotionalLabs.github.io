@@ -62,23 +62,19 @@ There are 4 types of symbol in the packet format: Preamble, Zero (“0”), One 
 
 #### Preamble:
 
-|-|:-|
-|![Preamble](/assets/images/2012-12-08_Preamble.jpg "Preamble")| **High:** 2ms (2000us) / **Low:** 2ms (2000us) / **Period:** 4ms (2000us) |
+<img align="left" src="/assets/images/2012-12-08_Preamble.jpg"> **High:** 2ms (2000us) / **Low:** 2ms (2000us) / **Period:** 4ms (2000us) 
 
 #### Zero:
 
-|-|:-|
-|![Zero](/assets/images/2012-12-08_Zero.jpg "Zero")| **High:** 0.3ms (300us) / **Low:** 0.3 (300us) / **Period:** 0.6ms (600us) |
+<img align="left" src="/assets/images/2012-12-08_Zero.jpg"> **High:** 0.3ms (300us) / **Low:** 0.3 (300us) / **Period:** 0.6ms (600us)
 
 #### One:
 
-|-|:-|
-| ![One](/assets/images/2012-12-08_One.jpg "One") | **High:** 0.3ms (300us) / **Low:** 0.7ms (700ms) / **Period:** 1ms (1000us) |
+<img align="left" src="/assets/images/2012-12-08_One.jpg"> **High:** 0.3ms (300us) / **Low:** 0.7ms (700ms) / **Period:** 1ms (1000us) 
 
 #### Footer:
 
-|-|:-|-|-|
-| ![Footer](/assets/images/2012-12-08_footer.jpg "Footer") | **High:** 0.3ms (300us) | | |
+<img align="left" src="/assets/images/2012-12-08_footer.jpg"> **High:** 0.3ms (300us)
 
 I almost missed this, but there is in fact a footer pulse at the end of the packet 300 microseconds long followed by a long period of low signal until the next packet header.
 
@@ -148,12 +144,6 @@ From this information, we can make the following assumptions:
 ## The Mystery of the Missing Byte
 
 <img align="right" src="/assets/images/2012-12-08_trim_dial.jpg"> You may remember that I said above that everyone else who has reverse-engineered the protocol arrived at a 4-byte control packet.So where was my 4th byte? Well there’s one more dial on the controller we haven’t discussed – Trim. Trim is used to calibrate the rotor speed balance in order to account for any idiosyncrasies in the helicopter’s build that cause it to have a rotational bias to left or right.
-
-
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;||
-|------------------------------|:-|
-|![Trim Dial](/assets/images/2012-12-08_trim_dial.jpg "Trim Dial")|You may remember that I said above that everyone else who has reverse-engineered the protocol arrived at a 4-byte control packet.So where was my 4th byte? Well there’s one more dial on the controller we haven’t discussed – Trim. Trim is used to calibrate the rotor speed balance in order to account for any idiosyncrasies in the helicopter’s build that cause it to have a rotational bias to left or right.|
-|*The trim dial*||
 
 In the other’s work, their controller sent a fourth byte containing information about the Trim dial’s setting. My controller doesn’t have that byte, but I do have Trim control… so what’s the deal? Let’s do a bit more testing:
 
