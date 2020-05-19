@@ -149,7 +149,7 @@ From this information, we can make the following assumptions:
 
 |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;||
 |----|:-|
-|<img src="/assets/images/2012-12-08_trim_dial.jpg" width="152">|You may remember that I said above that everyone else who has reverse-engineered the protocol arrived at a 4-byte control packet. So where was my 4th byte? Well there’s one more dial on the controller we haven’t discussed – Trim. Trim is used to calibrate the rotor speed balance in order to account for any idiosyncrasies in the helicopter’s build that cause it to have a rotational bias to left or right.|
+|![Packet Decode](/assets/images/assets/images/2012-12-08_trim_dial.jpg "Packet Decode"){:height="245px" width="152px"}|You may remember that I said above that everyone else who has reverse-engineered the protocol arrived at a 4-byte control packet. So where was my 4th byte? Well there’s one more dial on the controller we haven’t discussed – Trim. Trim is used to calibrate the rotor speed balance in order to account for any idiosyncrasies in the helicopter’s build that cause it to have a rotational bias to left or right.|
 
 In the other’s work, their controller sent a fourth byte containing information about the Trim dial’s setting. My controller doesn’t have that byte, but I do have Trim control… so what’s the deal? Let’s do a bit more testing:
 
