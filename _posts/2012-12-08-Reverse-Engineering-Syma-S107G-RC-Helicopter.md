@@ -7,7 +7,7 @@ category: reverse\ engineering
 tags: infrared protocol reversing saleae logic
 ---
 
-*[2020-05-18] This post was migrated from my old blog in 2012. I've tried to ensure all links, images, and content are reproduced, but please @ me if you find anyuthing missing.*
+*[2020-05-18] This post was migrated from my old blog in 2012. I've tried to ensure all links, images, and content are reproduced, but please @ me if you find anything missing.*
 
 The Syma 107 RC helicopter is a pretty great gadget, all things considered – it’s cheap, fun, and ridiculously good for the price. It’s also a spectacular gadget for fledgling hackers.
 
@@ -180,10 +180,10 @@ I’ve had a little time this weekend to compare a 4-byte controller with 3-byte
 * The fourth byte indeed  communicates the value of the Trim, but I actually identified something really interesting – the offsetting of the Yaw value occurs anyway, regardless of packet type! Take a look at this:
 
 ```
-Control:         Control packet (4 byte)           Yaw:    Trim:
-Trim 100% Left:  01010000001111111011010001111011   80      123
-Trim Centre:     00111101001111111100100100111000   61      56
-Trim 100% Right: 00101101001111111100111100000001   45      1
+Control:         Control packet (4 byte)              Yaw:    Trim:
+Trim 100% Left:  01010000 00111111 10110100 01111011   80      123
+Trim Centre:     00111101 00111111 11001001 00111000   61      56
+Trim 100% Right: 00101101 00111111 11001111 00000001   45      1
 ```
 
 I suspect that the 107G doesn’t actually do anything with the Trim packet (perhaps I’ll test that with my DIY controller sometime soon), which explains how it’s able to handle both packet types – it simply ignores anything after the 3rd byte. I suspect that the 4th byte may be used by other toys using a similar design.
