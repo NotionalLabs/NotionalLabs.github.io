@@ -147,7 +147,7 @@ From this information, we can make the following assumptions:
 
 ## The Mystery of the Missing Byte
 
-|-|:-|
+|----|:-|
 |![Trim Control](/assets/images/2012-12-08_trim_dial.jpg "Trim Control")|You may remember that I said above that everyone else who has reverse-engineered the protocol arrived at a 4-byte control packet. So where was my 4th byte? Well there’s one more dial on the controller we haven’t discussed – Trim. Trim is used to calibrate the rotor speed balance in order to account for any idiosyncrasies in the helicopter’s build that cause it to have a rotational bias to left or right.|
 
 In the other’s work, their controller sent a fourth byte containing information about the Trim dial’s setting. My controller doesn’t have that byte, but I do have Trim control… so what’s the deal? Let’s do a bit more testing:
@@ -165,137 +165,29 @@ From a reverse engineering point of view, this is an interesting quirk. I have t
 
 I think it might have something to do with the footer. The 3-byte protocol doesn’t require the helicopter to do anything in order to account for trim, while the 4-byte protocol requires the chopper’s on-board controller to offset the Yaw by the Trim value. The footer appears to consist a 300us high pulse then nothing until the next header, and this appears to be the case even on the other chaps’ 4-byte packets too. I suspect that if the helicopter’s on-board controller detects the end of a packet and it has only received 3-bytes of data, it pads the trim register with zeroes (no supplied trim offset) because it can assume trim control has been applied by the handset controller. Just a guess, but it seems logical. In any case, who would have thought the helicopter would be backwards/forwards compatible?
 
-# Header 1
+## Conclusion
 
-Here is some text
+So there you have it – my first foray into hardware hacking and exploration. I think I’ve arrived at a definitive physical protocol definition, with timing values even better, perhaps, than the other projects I’ve mentioned throughout.  I put this down to the use of a logic analyser applied directly to the controller – this was unaffected by delays caused by the rise/fall times of the LEDs, IR detector, etc… that were part of the receiver circuits used by Kerry Wong and Hamsterworks to get around the issue of demodulating the 38khz IR signal. I was able to use Saleae’s excellent software to overcome those issues (albeit a little manually – it won’t demodulate the signal for you to my knowledge). The Saleae Logic also allowed me to sample at 16Mhz, certainly fast enough to get a high-resolution picture of the signals and really get some tight timing values for the transitions.
 
-## Header 2
+I hope this helps some new hacker get to grips with some of the ideas at play in reverse-engineering and hardware hacking, it’s certainly been a journey of discovery for me. If anyone has any questions, feel free to get in touch.
 
-Here is some other text
+## UPDATE – 12-8-2012
 
-### Header 3
+I’ve had a little time this weekend to compare a 4-byte controller with 3-byte controller, so here are my findings.
 
-Here is yet more text
+* The timings for the symbols and transmission intervals are identical between the two controllers, so my timings should work equally well on any revision of the 107G you end up getting.
+* One way to distinguish between which protocol version the controller is using may be the silkscreened model number and date on the controller PCB. The 3-byte controller had the model “S107T1” and the date “20090818” printed underneath the yaw/pitch and throttle control, respectively. The 4-byte controller had “s107T2” and “20100308” printed under the yaw/pitch control and on the right of the PCB.
+* The fourth byte indeed  communicates the value of the Trim, but I actually identified something really interesting – the offsetting of the Yaw value occurs anyway, regardless of packet type! Take a look at this:
 
-#### Header 4
-
-What the F.
-
-# Some emphasis styles:
-
-Emphasis, aka italics, with *asterisks* or _underscores_.
-
-Strong emphasis, aka bold, with **asterisks** or __underscores__.
-
-Combined emphasis with **asterisks and _underscores_**.
-
-Strikethrough uses two tildes. ~~Scratch this.~~
-
-# Lists
-
-1. First ordered list item
-2. Another item
-  * Unordered sub-list. 
-1. Actual numbers don't matter, just that it's a number
-  1. Ordered sub-list
-4. And another item.
-
-⋅⋅⋅You can have properly indented paragraphs within list items. Notice the blank line above, and the leading spaces (at least one, but we'll use three here to also align the raw Markdown).
-
-⋅⋅⋅To have a line break without a paragraph, you will need to use two trailing spaces.⋅⋅
-⋅⋅⋅Note that this line is separate, but within the same paragraph.⋅⋅
-⋅⋅⋅(This is contrary to the typical GFM line break behaviour, where trailing spaces are not required.)
-
-* Unordered list can use asterisks
-- Or minuses
-+ Or pluses
-
-# Links
-
-[I'm an inline-style link](https://www.google.com)
-
-[I'm an inline-style link with title](https://www.google.com "Google's Homepage")
-
-[I'm a reference-style link][Arbitrary case-insensitive reference text]
-
-[I'm a relative reference to a repository file](../blob/master/LICENSE)
-
-[You can use numbers for reference-style link definitions][1]
-
-Or leave it empty and use the [link text itself].
-
-URLs and URLs in angle brackets will automatically get turned into links. 
-http://www.example.com or <http://www.example.com> and sometimes 
-example.com (but not on Github, for example).
-
-Some text to show that the reference links can follow later.
-
-[arbitrary case-insensitive reference text]: https://www.mozilla.org
-[1]: http://slashdot.org
-[link text itself]: http://www.reddit.com
-
-# Images
-
-Here's our logo (hover to see the title text):
-
-Inline-style: 
-![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 1")
-
-Reference-style: 
-![alt text][logo]
-
-[logo]: https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 2"
-
-# Code
-
-Inline `code` has `back-ticks around` it.
-
-```javascript
-var s = "JavaScript syntax highlighting";
-alert(s);
 ```
- 
-```python
-s = "Python syntax highlighting"
-print s
-```
- 
-```
-No language indicated, so no syntax highlighting. 
-But let's throw in a <b>tag</b>.
+Control:         Control packet (4 byte)           Yaw:    Trim:
+Trim 100% Left:  01010000001111111011010001111011   80      123
+Trim Centre:     00111101001111111100100100111000   61      56
+Trim 100% Right: 00101101001111111100111100000001   45      1
 ```
 
-{% highlight ruby %}
-def foo
-  puts 'foo'
-end
-{% endhighlight %}
+I suspect that the 107G doesn’t actually do anything with the Trim packet (perhaps I’ll test that with my DIY controller sometime soon), which explains how it’s able to handle both packet types – it simply ignores anything after the 3rd byte. I suspect that the 4th byte may be used by other toys using a similar design.
 
-# Tables
+## UPDATE – April 6th, 2014
 
-Colons can be used to align columns.
-
-| Tables        | Are           | Cool  |
-| ------------- |:-------------:| -----:|
-| col 3 is      | right-aligned | $1600 |
-| col 2 is      | centered      |   $12 |
-| zebra stripes | are neat      |    $1 |
-
-There must be at least 3 dashes separating each header cell.
-The outer pipes (|) are optional, and you don't need to make the 
-raw Markdown line up prettily. You can also use inline Markdown.
-
-Markdown | Less | Pretty
---- | --- | ---
-*Still* | `renders` | **nicely**
-1 | 2 | 3
-
-# Blockquotes
-
-> Blockquotes are very handy in email to emulate reply text.
-> This line is part of the same quote.
-
-Quote break.
-
-> This is a very long line that will still be quoted properly when it wraps. Oh boy let's keep writing to make sure this is long enough to actually wrap for everyone. Oh, you can *put* **Markdown** into a blockquote. 
-
+I finally got round to finishing the post containing an actual implementation of the protocol using an Arduino Uno. You can find it [here](/misc/protocols/Syma107_ProtocolSpec_v1.txt).
