@@ -72,25 +72,60 @@ There are 4 types of symbol in the packet format: Preamble, Zero (“0”), One 
 
 #### One:
 
-| - | :- |
+|-|:-|
 | ![One](/assets/images/2012-12-08_One.jpg "One") | **High:** 0.3ms (300us) / **Low:** 0.7ms (700ms) / **Period:** 1ms (1000us) |
 
 #### Footer:
 
-| - | :- |
-| ![Footer](/assets/images/2012-12-08_footer.jpg "Footer") | **High:** 0.3ms (300us) |
+|-|:-|-|-|
+| ![Footer](/assets/images/2012-12-08_footer.jpg "Footer") | **High:** 0.3ms (300us) | | |
 
 I almost missed this, but there is in fact a footer pulse at the end of the packet 300 microseconds long followed by a long period of low signal until the next packet header.
 
-#### Channels
+### Channels
 
 The Syma 107G controller appears to support 2 “channels” so that two pilots can fly their heli’s at the same time without interfering with each other. Examining the behaviour of the transmitter when switching channels indicated that the only differences between the two is a) the packet transmission interval and b) a special bit in the control packet is flipped (more on this later). The image below shows the differences in packet Tx intervals when the channel select slider is flipped (channel 1 of the Logic analyser):
 
-![Channel Flip](/assets/images/2012-12-08_ChannelFlip.jpg "Channel Flip")
+![Channel Flip](/assets/images/2012-12-08_ChannelFlip.jpg "Channel Flip"){: .center-image }
 
 The transmit interval for Channel A is **120ms** (start of a packet header to the start of the next packet), or 8.33 packets per second. The transmit interval for Channel B is **180ms**, or 5.55 packets per second.
 
 So surprisingly, the carrier modulation frequency remains the same on both channels – not the most robust design, huh? I suspect the reason the transmit interval is increased is to reduce the likelihood of a collision of control packets from two controllers – if a packet collision does occur, the next control frames from each controller will almost definitely be out of phase with each other, so the chopper shouldn’t just fall out of the air (though in my experience, they do get a bit clumsy when you have two going at once…).
+
+## The Control Packet Structure
+
+So now that we understand what a packet looks like, let’s decode one and have a look at it at a higher level:
+
+![Packet Decode](/assets/images/2012-12-08_packet_decode.jpg "Packet Decode"){: .center-image }
+
+ And here it is again:
+
+```
+ |     byte 0    |     byte 1    |     byte 2    |
+  0 0 1 1 1 1 1 1 0 0 1 1 1 1 1 1 0 1 0 1 0 0 1 0
+ |  Decimal: 63  |  Decimal: 63  |  Decimal: 82  |
+```
+So we have a header, followed by 3 bytes (24 bits) of information, plus a footer pulse that makes up a control packet. Now lets figure out what the data means by trying various permutations of the controls (zero throttle, full throttle, 100% left turn, 100% right turn, etc…) and see how the data changes:
+
+
+```
+Type:         Data:                     Decimal Values (byte #):
+100% Throttle 001111110011111101111111  (0): 63  (1): 63  (2): 127
+50% Throttle  001111110011111100111111  (0): 63  (1): 63  (2): 63
+100% Left     011111100011111101000110  (0): 126 (1): 63  (2): 70
+100% Right    000001100011111101001011  (0): 6   (1): 63  (2): 75
+100% Forward  001111110000000001010100  (0): 63  (1): 0   (2): 84
+100% Back     001111110111011101010100  (0): 63  (1): 119 (2): 84
+Channel A     001111110011111101010010  (0): 63  (1): 63  (2): 82
+Channel B     001111110011111111010010  (0): 63  (1): 63  (2): 210
+111
+```
+
+*Note: The controller requires that there be at least some throttle applied before it will send any packets, which is why byte 2 appears to change a little on the other tests.*
+
+From this information, we can make the following assumptions:
+
+
 
 
 
