@@ -116,16 +116,31 @@ Type:         Data:                     Decimal Values (byte #):
 100% Right    000001100011111101001011  (0): 6   (1): 63  (2): 75
 100% Forward  001111110000000001010100  (0): 63  (1): 0   (2): 84
 100% Back     001111110111011101010100  (0): 63  (1): 119 (2): 84
-Channel A     001111110011111101010010  (0): 63  (1): 63  (2): 82
-Channel B     001111110011111111010010  (0): 63  (1): 63  (2): 210
-111
+Channel A     0011111100111111<span style="color: red">0</span>1010010  (0): 63  (1): 63  (2): 82
+Channel B     0011111100111111<span style="color: red">1</span>1010010  (0): 63  (1): 63  (2): 210
 ```
 
 *Note: The controller requires that there be at least some throttle applied before it will send any packets, which is why byte 2 appears to change a little on the other tests.*
 
 From this information, we can make the following assumptions:
 
+**Byte 0**
+– Byte 0 represents the Yaw (left/right) control.
+– Byte 0 has a range of 0-127.
+– 0-62 is a right turn, 63 is centre (default) value, 64-127 is a left turn.
+– the first bit, bit 0, appears to always be 0.
 
+**Byte 1**
+– Byte 1 represents the Pitch (forward/backwards) control.
+– Byte 1 has a range of 0-127.
+– 0-62 is pitch forward, 63 is centre (default) value, 64-127 is pitch backwards.
+– the first bit appears to always be 0.
+
+**Byte 2**
+– Byte 2 represents throttle and channel.
+– Byte 2 (throttle) has a range of 0-127.
+– 0 is 0% throttle, 127 is 100% throttle.
+– the most significant bit of Byte 2 (highlighted red above) indicates which Channel is selected. 0 for Channel A, 1 for Channel B. This is how we can have 2 channels without changing the carrier frequency.
 
 
 
