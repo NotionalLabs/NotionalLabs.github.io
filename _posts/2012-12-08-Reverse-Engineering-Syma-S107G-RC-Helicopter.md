@@ -58,8 +58,7 @@ The following timings are based on observations I’ve made on a sample of contr
 ### Symbols
 There are 4 types of symbol in the packet format: Preamble, Zero (“0”), One (“1”), and a footer:
 
-|:---:|
-| ![Carrier Signal](/assets/images/2012-12-08_Carrier_Wave.jpg "Carrier Signal") |
+![Carrier Signal](/assets/images/2012-12-08_Carrier_Wave.jpg "Carrier Signal"){: .center-image }
 
 #### Preamble:
 
