@@ -125,24 +125,45 @@ Channel B     001111110011111111010010  (0): 63  (1): 63  (2): 210
 From this information, we can make the following assumptions:
 
 **Byte 0**
+
 * Byte 0 represents the Yaw (left/right) control.
 * Byte 0 has a range of 0-127.
 * 0-62 is a right turn, 63 is centre (default) value, 64-127 is a left turn.
 * the first bit, bit 0, appears to always be 0.
 
 **Byte 1**
+
 * Byte 1 represents the Pitch (forward/backwards) control.
 * Byte 1 has a range of 0-127.
 * 0-62 is pitch forward, 63 is centre (default) value, 64-127 is pitch backwards.
 * the first bit appears to always be 0.
 
 **Byte 2**
+
 * Byte 2 represents throttle and channel.
 * Byte 2 (throttle) has a range of 0-127.
 * 0 is 0% throttle, 127 is 100% throttle.
 * the most significant bit of Byte 2 indicates which Channel is selected. 0 for Channel A, 1 for Channel B. This is how we can have 2 channels without changing the carrier frequency.
 
+## The Mystery of the Missing Byte
 
+|-|:-|
+|![Trim Control](/assets/images/2012-12-08_trim_dial.jpg "Trim Control")|You may remember that I said above that everyone else who has reverse-engineered the protocol arrived at a 4-byte control packet. So where was my 4th byte? Well there’s one more dial on the controller we haven’t discussed – Trim. Trim is used to calibrate the rotor speed balance in order to account for any idiosyncrasies in the helicopter’s build that cause it to have a rotational bias to left or right.|
+
+In the other’s work, their controller sent a fourth byte containing information about the Trim dial’s setting. My controller doesn’t have that byte, but I do have Trim control… so what’s the deal? Let’s do a bit more testing:
+
+```
+Type:         Data:                     Decimal Values (byte #):
+Trim 100% L   010100000011111101010100  (0): 80  (1): 63  (2): 84
+Trim Centre   001111110011111101010100  (0): 63  (1): 63  (2): 84
+Trim 100% R   001011100011111101010100  (0): 46  (1): 63  (2): 84
+```
+
+We can see that the only byte that changes is Byte 0, so we can assume that rather than have a whole separate packet for trim control, the controller simply offsets the Yaw by a as much as -17 (right/clockwise compensation) or +17 (left/counter-clockwise compensation).
+
+From a reverse engineering point of view, this is an interesting quirk. I have tried and tested both kinds of remote with the same helicopters and they both work flawlessly. What’s more, before I decoded the protocol myself, I built a whole controller based on the 4-byte protocol and never had any issues. So how does the helicopter know which protocol to use?
+
+I think it might have something to do with the footer. The 3-byte protocol doesn’t require the helicopter to do anything in order to account for trim, while the 4-byte protocol requires the chopper’s on-board controller to offset the Yaw by the Trim value. The footer appears to consist a 300us high pulse then nothing until the next header, and this appears to be the case even on the other chaps’ 4-byte packets too. I suspect that if the helicopter’s on-board controller detects the end of a packet and it has only received 3-bytes of data, it pads the trim register with zeroes (no supplied trim offset) because it can assume trim control has been applied by the handset controller. Just a guess, but it seems logical. In any case, who would have thought the helicopter would be backwards/forwards compatible?
 
 # Header 1
 
